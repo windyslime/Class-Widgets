@@ -28,3 +28,10 @@ PyGetWindow~=0.0.9
 edge-tts~=7.0.0
 pyttsx3==2.71
 git+https://github.com/SmartTeachCN/pycses.git
+# macOS 专用
+pyobjc==10.2; sys_platform == 'darwin'
+pyobjc-framework-Cocoa==10.2; sys_platform == 'darwin'
+# 添加Mac核心依赖
+PyObjC==9.2
+PyObjC-core==9.2
+PyObjC-framework-Cocoa==9.2
