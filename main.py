@@ -42,10 +42,30 @@ if os.name == 'nt':
     import pygetwindow
 
 # 适配高DPI缩放
+# 在全局导入后增加架构检测
+import platform
+is_apple_silicon = platform.machine() == 'arm64' and sys.platform == 'darwin'
+
+# 修改现有高DPI设置
 QApplication.setHighDpiScaleFactorRoundingPolicy(
     Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
 QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
 QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
+if is_apple_silicon:  # 新增Apple Silicon专属设置
+    os.environ['QT_MAC_WANTS_LAYER'] = '1'
+    os.environ['QT_ENABLE_HIGHDPI_SCALING'] = '1'
+
+class FloatingWidget(QWidget):
+    def init_ui(self):
+        # 修改窗口标志设置（原Qt.X11BypassWindowManagerHint在macOS失效）
+        self.setWindowFlags(
+            Qt.WindowType.FramelessWindowHint | 
+            Qt.WindowType.WindowStaysOnTopHint |
+            Qt.WindowType.SubWindow  # 替换为macOS适配的窗口类型
+        )
+        if is_apple_silicon:
+            self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景支持
+            self.setAttribute(Qt.WA_ShowWithoutActivating)  # 防止窗口激活
 
 today = dt.date.today()
 
@@ -1698,7 +1718,6 @@ class DesktopWidget(QWidget):  # 主要小组件
             self.weather_thread.quit()  # 退出天气线程
         if hasattr(self, 'weather_timer'):
             self.weather_timer.stop()  # 停止定时器
-
 
 def check_windows_maximize():  # 检查窗口是否最大化
     if os.name != 'nt':
