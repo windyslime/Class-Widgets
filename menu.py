@@ -632,7 +632,7 @@ class SettingsMenu(FluentWindow):
         cf_export_schedule = self.findChild(PushButton, 'ex_schedule')
         cf_export_schedule.clicked.connect(self.cf_export_schedule)  # 导出课程表
         cf_open_schedule_folder = self.findChild(PushButton, 'open_schedule_folder')  # 打开课程表文件夹
-        cf_open_schedule_folder.clicked.connect(lambda: open_dir(os.path.join(os.path.abspath('.'), 'config/schedule')))
+        cf_open_schedule_folder.clicked.connect(lambda: open_dir(os.path.join(base_directory, 'config/schedule')))
 
         cf_import_schedule_cses = self.findChild(PushButton, 'im_schedule_cses')
         cf_import_schedule_cses.clicked.connect(self.cf_import_schedule_cses)  # 导入课程表（CSES）
